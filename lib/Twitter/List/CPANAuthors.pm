@@ -1,4 +1,4 @@
-package Twitter::List::Create::CPANAuthors;
+package Twitter::List::CPANAuthors;
 
 use 5.014;
 use feature 'say';
@@ -51,7 +51,7 @@ sub _populate_list
         # 
         # If we call $nt->add_list_member without an eval, and the user
         # ($member_id) doesn't exist, the program will crash with 
-        # "Cannot find specified user at lib/Twitter/List/Create/CPANAuthors.pm line 57".
+        # "Cannot find specified user at lib/Twitter/List/CPANAuthors.pm line 57".
         # 
         # I've looked into detecting the existence of a user account before
         # attempting to add the user to the list, but available options are
@@ -68,7 +68,7 @@ sub _populate_list
         #  https://dev.twitter.com/docs/things-every-developer-should-know 
         #
         # Finally, using add_list_members (plural) limits me to adding only 100
-        # members at a time, and doesn't recover well..?
+        # members at a time, but has yet to be tested for performance.
         #
         # Using the boolean result of an eval seems to be the fastest way
         # to move forward at the moment.
@@ -85,6 +85,9 @@ sub _populate_list
                 );
             };
         next if !defined($user_record);
+
+        # Some entered full URLs instead of just their twitter ids. 
+        # This may be a MetaCPAN input validation fail.
         next if $user_record =~ /^https?:\/\//;
     }
 }
