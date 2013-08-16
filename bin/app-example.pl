@@ -10,13 +10,14 @@ use Twitter::List::CPANAuthors;
 my $listname = "CPAN Authors";
 
 my %settings = (
+    dbg                 => 0, # (0 or 1), default 0 (slient), shows debug data on STDOUT
     listname            => $listname,
-    consumer_key        => '5BxVApzxce9UadMS0cwJ5g',
-    consumer_secret     => 'CETd0pnokcfOChMOksOgbgHgfmCGKOlFgxX4pSglGQ',
-    access_token        => '15050103-yxGtb6Yhv4YIrOeQaY8OD6B1QTKfsjzbKAZsQIkI',
-    access_token_secret => 'Bw4iCXJJJohoywphIxWuFzvVH0MAufnr42U2cBntOY'
+    consumer_key        => $consumer_key,
+    consumer_secret     => $consumer_secret,
+    access_token        => $access_token,
+    access_token_secret => $access_token_secret
 );
 
-my $twitter_list = new Twitter::List::Create::CPANAuthors;
+my $twitter_list = new Twitter::List::CPANAuthors;
 $twitter_list->create( %settings );
 

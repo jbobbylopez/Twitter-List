@@ -7,18 +7,28 @@ use warnings;
 
 use Net::Twitter;
 use ElasticSearch;
-use Scalar::Util 'blessed';
 use Sub::Exporter -setup => { exports => ['create'] };
+use DateTime;
 use Data::Dumper;
+
+our $dbg = 0;
 
 sub new
 {
-    return bless( {}, shift );
+  my $package = shift;
+  my $class = ref($package) || $package;
+  my $self = {};
+  $self->{dbg} = 0;
+  
+  bless $self, $class;
+  return $self;
 }
 
 sub create
 {
     my ( $class, %args ) = @_;
+    _set_debug( $args{dbg} );
+
     my $nt = Net::Twitter->new(
         traits              => [qw/API::RESTv1_1/],
         consumer_key        => $args{consumer_key},
@@ -30,18 +40,30 @@ sub create
     my @twitter_ids = @{ _scroller() };
     my ( $list_id, $user_id, $u_screen_name, $slug ) = _create_list( $nt, $args{listname} );
     _populate_list( $nt, $list_id, $slug, $user_id, $u_screen_name, \@twitter_ids );
+    _debug( "...List $slug (id: $list_id) complete on ", _dateTimeISO8601() , "." );
+}
+
+sub _dateTimeISO8601
+{
+    return DateTime->now()->ymd, "T", DateTime->now()->hms;
 }
 
 sub _create_list
 {
     my ($nt, $listname) = @_;
     my $result = $nt->create_list( $listname );
+    _debug( "Creating list \@$result->{user}->{screen_name}/$listname (id: $result->{id}) on ", _dateTimeISO8601() , "..." );
     return ($result->{id}, $result->{user}->{id}, $result->{user}->{screen_name}, $result->{slug});
 }
 
 sub _populate_list
 {
     my ($nt, $list_id, $slug, $user_id, $u_screen_name, $twitter_ids) = @_; 
+
+    my $members_total = 0;
+    my $members_added = 0;
+
+    _debug( "Populating $slug (id: $list_id) on ", _dateTimeISO8601() , "..." );
 
     for my $member_id ( @{ $twitter_ids} )
     {
@@ -83,6 +105,7 @@ sub _populate_list
                         owner_id          => $u_screen_name
                     }
                 );
+                _debug( "Added member '\@$member_id' to list (id: $list_id) at ", _dateTimeISO8601() , "." );
             };
         next if !defined($user_record);
 
@@ -90,6 +113,7 @@ sub _populate_list
         # This may be a MetaCPAN input validation fail.
         next if $user_record =~ /^https?:\/\//;
     }
+1;
 }
 
 sub _es {
@@ -128,6 +152,28 @@ sub _scroller
     }
 
     return \@cpan_twitter_ids;
+}
+
+sub _debug
+{
+    my $str = join '', @_;
+
+    if ( $Twitter::List::CPANAuthors::dbg )
+    {
+        say $str;
+    }
+1;
+}
+
+sub _set_debug
+{
+    my ($dbg) = @_;
+
+    if ( defined($dbg) && $dbg eq 1 )
+    {
+        $Twitter::List::CPANAuthors::dbg = $dbg;
+    }
+1;
 }
 
 1;
