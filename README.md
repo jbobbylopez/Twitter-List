@@ -27,5 +27,11 @@ my $twitter_list = new Twitter::List::CPANAuthors->create( %settings );
 
 Twitter::List::Create::CPANAuthors provides the ability to easily create a new Twitter list and have it populated with a list of Twitter usernames associated with CPAN authors based on data pulled from MetaCPAN.
 
+##### Warning
+
+Whenever you add a user to a Twitter List, that user is
+notified that they have been added to a list.  If you use this module
+often, you are likely to some of the CPAN authors.  You have been warned.
+
 ##### Author
 J. Bobby Lopez - http://www.jbldata.com
