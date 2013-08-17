@@ -21,7 +21,7 @@ my $settings = {
 	access_token_secret 	=> $token_secret
 };
 my $twitter_list = new Twitter::List::CPANAuthors->create( %settings );
-'''
+```
 
 ##### Description
 
