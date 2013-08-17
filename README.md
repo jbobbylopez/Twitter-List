@@ -1,4 +1,4 @@
-### Twitter::List::CPANAuthors
+### Twitter::List
 
 #### Summary
 
