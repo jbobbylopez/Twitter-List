@@ -8,30 +8,54 @@ Provided a set of Twitter API keys, a list name, and a list of Twitter IDs, Twit
 
 ```
 use 5.14;
-use Twitter::List::CPANAuthors;
+use strict;
+use warnings;
+use Twitter::List;
 
-my $listname = "CPAN Authors";
+my $listname = "My New List";
+my $consumer_key        = "xxxxxxxxxxxxxx";
+my $consumer_secret     = "xxxxxxxxxxxxxx";
+my $access_token        = "xxxxxxxxxxxxxx";
+my $access_token_secret = "xxxxxxxxxxxxxx";
+
+my @twitter_ids = ( 'marym', 'joej', 'jimj', 'johnj' );
 
 my $settings = {
-	dbg						=> 1 # (0|1), 0 default (silent), shows debug data on STDOUT
-	listname 				=> $listname, 
+	dbg			=> 0 # (0|1), 1 default (enabled), shows debug data on STDOUT
 	consumer_key        	=> $consumer_key,
 	consumer_secret     	=> $consumer_secret,
-	access_token        	=> $token,
-	access_token_secret 	=> $token_secret
+	access_token        	=> $access_token,
+	access_token_secret 	=> $access_token_secret
 };
-my $twitter_list = new Twitter::List::CPANAuthors->create( %settings );
+
+my $TWL = new Twitter::List->create_list( $listname );
+
+my ( $list_id,
+     $user_id,
+     $user_screen_name,
+     $slug ) = $TWL->create_list( $listname );
+     
+$TWL->populate_list(
+    $list_id,
+    $user_id,
+    $user_screen_name,
+    $slug,
+    \@twitter_ids );
+    
+    
+$TWL->set_debug( 1 );
+$TWL->debug( "...List $slug (id: $list_id) populated successfully!" );
 ```
 
 ##### Description
 
-Twitter::List::CPANAuthors provides the ability to easily create a new Twitter list and have it populated with a list of Twitter usernames associated with CPAN authors based on data pulled from MetaCPAN.
+Twitter::List provides the ability to easily create Twitter lists and populate them with a list of Twitter usernames.
 
 ##### Warning
 
-Whenever you add a user to a Twitter List, that user is
+Whenever you add a user to a Twitter List, that user may be
 notified that they have been added to a list.  If you use this module
-often, you are likely to annoy some of the CPAN authors.  You have been warned.
+often with the same usernames, you may annoy some people.  You have been warned.
 
 ##### Author
 J. Bobby Lopez - http://www.jbldata.com
