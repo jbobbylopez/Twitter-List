@@ -13,7 +13,7 @@ my $access_token        = "xxxxxxxxxxxxxx";
 my $access_token_secret = "xxxxxxxxxxxxxx";
 
 my %settings = (
-    dbg                 => 0, # (0 or 1), default 0 (slient), shows debug data on STDOUT
+    dbg                 => 0, # (0 or 1), default 1 (enabled), shows debug data on STDOUT
     listname            => $listname,
     consumer_key        => $consumer_key,
     consumer_secret     => $consumer_secret,

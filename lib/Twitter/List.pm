@@ -9,13 +9,24 @@ use Net::Twitter;
 use Sub::Exporter -setup => { exports => ['create_list','populate_list','debug','set_debug'] };
 use DateTime;
 
+our $NT;
 our $dbg = 0;
 
 sub new
 {
-  my $package = shift;
-  my $class = ref($package) || $package;
+  my $package = shift; 
+  my $class = ref($package) || $package; 
+  my ( %keys ) = @_;
+
   my $self = {};
+
+  $Twitter::List::NT = Net::Twitter->new(
+        traits              => [qw/API::RESTv1_1/],
+        consumer_key        => $keys{consumer_key},
+        consumer_secret     => $keys{consumer_secret},
+        access_token        => $keys{access_token},
+        access_token_secret => $keys{access_token_secret},
+    );
   
   bless $self, $class;
   return $self;
@@ -23,15 +34,15 @@ sub new
 
 sub create_list
 {
-    my ($class, $nt, $listname) = @_;
-    my $result = $nt->create_list( $listname );
-    debug( "Creating list \@$result->{user}->{screen_name}/$listname (id: $result->{id}) on ", _dateTimeISO8601() , "..." );
+    my ($class, $listname) = @_;
+    my $result = $Twitter::List::NT->create_list( $listname );
+    debug( "Creating list \@$result->{user}->{screen_name}/$listname (id: $result->{id})..." );
     return ($result->{id}, $result->{user}->{id}, $result->{user}->{screen_name}, $result->{slug});
 }
 
 sub populate_list
 {
-    my ($class, $nt, $list_id, $slug, $user_id, $u_screen_name, $twitter_ids) = @_; 
+    my ($class, $list_id, $slug, $user_id, $u_screen_name, $twitter_ids) = @_; 
 
     my $members_total = 0;
     my $members_added = 0;
@@ -70,7 +81,7 @@ sub populate_list
         #--------------------------------------------------------------#
         my $user_record = eval
             {
-                my $result = $nt->add_list_member(
+                my $result = $Twitter::List::NT->add_list_member(
                     {
                         list_id           => $list_id,
                         screen_name       => $member_id,

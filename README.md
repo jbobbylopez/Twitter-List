@@ -2,7 +2,7 @@
 
 ##### Summary
 
-Provided a set of Twitter API keys, Twitter::List::CPANAuthors will create a new Twitter List of CPAN authors based on data from MetaCPAN.
+Provided a set of Twitter API keys, a list name, and a list of Twitter IDs, Twitter::List will create a new Twitter List on Twitter.
 
 ##### Synopsis
 

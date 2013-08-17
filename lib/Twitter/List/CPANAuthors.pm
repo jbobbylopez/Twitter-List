@@ -2,7 +2,6 @@ package Twitter::List::CPANAuthors;
 use base ('Twitter::List');
 
 use 5.014;
-use feature 'say';
 use strict;
 use warnings;
 
@@ -25,26 +24,17 @@ sub create
 {
     my ( $class, %args ) = @_;
     
-    my $TL = Twitter::List->new();
+    my $TL = Twitter::List->new( %args );
 
     $TL->set_debug( $args{dbg} );
-
-    my $nt = Net::Twitter->new(
-        traits              => [qw/API::RESTv1_1/],
-        consumer_key        => $args{consumer_key},
-        consumer_secret     => $args{consumer_secret},
-        access_token        => $args{access_token},
-        access_token_secret => $args{access_token_secret},
-    );
 
     my @twitter_ids = @{ _scroller() };
     my ( $list_id,
          $user_id,
          $u_screen_name,
-         $slug ) = $TL->create_list( $nt, $args{listname} );
+         $slug ) = $TL->create_list( $args{listname} );
 
     $TL->populate_list(
-        $nt,
         $list_id,
         $slug,
         $user_id,
