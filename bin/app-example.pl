@@ -6,8 +6,11 @@ use lib "lib/";
 
 use Twitter::List::CPANAuthors;
 
-
-my $listname = "CPAN Authors";
+my $listname            = "CPAN Authors";
+my $consumer_key        = "xxxxxxxxxxxxxx";
+my $consumer_secret     = "xxxxxxxxxxxxxx";
+my $access_token        = "xxxxxxxxxxxxxx";
+my $access_token_secret = "xxxxxxxxxxxxxx";
 
 my %settings = (
     dbg                 => 0, # (0 or 1), default 0 (slient), shows debug data on STDOUT
@@ -19,5 +22,5 @@ my %settings = (
 );
 
 my $twitter_list = new Twitter::List::CPANAuthors;
-$twitter_list->create( %settings );
 
+$twitter_list->create( %settings );
