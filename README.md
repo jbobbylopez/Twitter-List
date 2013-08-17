@@ -6,6 +6,7 @@ Provided a set of Twitter API keys, Twitter::List::CPANAuthors will create a new
 
 ##### Synopsis
 
+```
 use 5.14;
 use Twitter::List::CPANAuthors;
 
@@ -20,6 +21,7 @@ my $settings = {
 	access_token_secret 	=> $token_secret
 };
 my $twitter_list = new Twitter::List::CPANAuthors->create( %settings );
+'''
 
 ##### Description
 
