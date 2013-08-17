@@ -14,10 +14,10 @@ my $listname = "CPAN Authors";
 
 my $settings = {
 	dbg						=> 1 # (0|1), 0 default (silent), shows debug data on STDOUT
-	listname 					=> $listname, 
-	consumer_key        		=> $consumer_key,
-	consumer_secret     		=> $consumer_secret,
-	access_token        			=> $token,
+	listname 				=> $listname, 
+	consumer_key        	=> $consumer_key,
+	consumer_secret     	=> $consumer_secret,
+	access_token        	=> $token,
 	access_token_secret 	=> $token_secret
 };
 my $twitter_list = new Twitter::List::CPANAuthors->create( %settings );
