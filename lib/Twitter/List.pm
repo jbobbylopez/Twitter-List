@@ -10,7 +10,7 @@ use Sub::Exporter -setup => { exports => ['create_list','populate_list','debug',
 use DateTime;
 
 our $NT;
-our $dbg = 0;
+our $dbg = 1;
 
 sub new
 {

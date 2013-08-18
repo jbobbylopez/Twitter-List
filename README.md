@@ -20,22 +20,22 @@ my $access_token_secret = "xxxxxxxxxxxxxx";
 
 my @twitter_ids = ( 'marym', 'joej', 'jimj', 'johnj' );
 
-my %settings = (
-	dbg                     => 0 # (0|1), 1 default (enabled), shows debug data on STDOUT
-	consumer_key        	=> $consumer_key,
-	consumer_secret     	=> $consumer_secret,
-	access_token        	=> $access_token,
-	access_token_secret 	=> $access_token_secret
+my %settings = ( 
+     consumer_key            => $consumer_key,
+     consumer_secret         => $consumer_secret,
+     access_token            => $access_token,
+     access_token_secret     => $access_token_secret
 );
 
 my $TWL = Twitter::List->new( %settings );
+$TWL->set_debug( 0 ); # (0|1), 1 default (enabled), shows debug data on STDOUT
 
 my %list_details = $TWL->create_list( $listname );
      
 $TWL->populate_list( \%list_details, \@twitter_ids );
     
 $TWL->set_debug( 1 );
-$TWL->debug( "...List $slug (id: $list_id) populated successfully!" );
+$TWL->debug( "...List $list_details{slug} (id: $list_details{list_id}) populated successfully!" );
 ```
 
 #### Description
