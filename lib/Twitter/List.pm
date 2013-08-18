@@ -36,18 +36,27 @@ sub create_list
 {
     my ($class, $listname) = @_;
     my $result = $Twitter::List::NT->create_list( $listname );
+    my %details;
+
     debug( "Creating list \@$result->{user}->{screen_name}/$listname (id: $result->{id})..." );
-    return ($result->{id}, $result->{user}->{id}, $result->{user}->{screen_name}, $result->{slug});
+
+    %details = (
+            list_id          => $result->{id},
+            user_id          => $result->{user}->{id},
+            user_screen_name => $result->{user}->{screen_name},
+            slug             => $result->{slug}
+           );
+    return %details;
 }
 
 sub populate_list
 {
-    my ($class, $list_id, $slug, $user_id, $u_screen_name, $twitter_ids) = @_; 
+    my ($class, $args, $twitter_ids) = @_; 
 
     my $members_total = 0;
     my $members_added = 0;
 
-    debug( "Populating $slug (id: $list_id)..." );
+    debug( "Populating $args->{slug} (id: $args->{list_id})..." );
 
     for my $member_id ( @{ $twitter_ids} )
     {
@@ -83,13 +92,13 @@ sub populate_list
             {
                 my $result = $Twitter::List::NT->add_list_member(
                     {
-                        list_id           => $list_id,
+                        list_id           => $args->{list_id},
                         screen_name       => $member_id,
-                        owner_screen_name => $u_screen_name,
-                        owner_id          => $u_screen_name
+                        owner_screen_name => $args->{user_screen_name},
+                        owner_id          => $args->{user_screen_name}
                     }
                 );
-                debug( "...Added member '\@$member_id' to list (id: $list_id)" );
+                debug( "...Added member '\@$member_id' to list (id: $args->{list_id})" );
             };
         next if !defined($user_record);
 
@@ -123,7 +132,7 @@ sub set_debug
     my $class = shift if ref($_[0]);
     my $dbg = shift;
 
-    if ( defined($dbg) && $dbg eq 1 )
+    if ( defined($dbg) && $dbg =~ /[10]/ )
     {
         $Twitter::List::dbg = $dbg;
     }

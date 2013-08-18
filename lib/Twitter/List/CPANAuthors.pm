@@ -29,19 +29,11 @@ sub create
     $TL->set_debug( $args{dbg} );
 
     my @twitter_ids = @{ _scroller() };
-    my ( $list_id,
-         $user_id,
-         $u_screen_name,
-         $slug ) = $TL->create_list( $args{listname} );
+    my %list_details = $TL->create_list( $args{listname} );
 
-    $TL->populate_list(
-        $list_id,
-        $slug,
-        $user_id,
-        $u_screen_name,
-        \@twitter_ids );
+    $TL->populate_list( \%list_details, \@twitter_ids );
 
-    $TL->debug( "...List $slug (id: $list_id) populated successfully!" );
+    $TL->debug( "...List $list_details{slug} (id: $list_details{list_id} ) populated successfully!" );
 }
 
 sub _es {
