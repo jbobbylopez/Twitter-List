@@ -20,27 +20,19 @@ my $access_token_secret = "xxxxxxxxxxxxxx";
 
 my @twitter_ids = ( 'marym', 'joej', 'jimj', 'johnj' );
 
-my $settings = {
+my %settings = (
 	dbg                     => 0 # (0|1), 1 default (enabled), shows debug data on STDOUT
 	consumer_key        	=> $consumer_key,
 	consumer_secret     	=> $consumer_secret,
 	access_token        	=> $access_token,
 	access_token_secret 	=> $access_token_secret
-};
+);
 
-my $TWL = new Twitter::List->create_list( $listname );
+my $TWL = Twitter::List->new( %settings );
 
-my ( $list_id,
-     $user_id,
-     $user_screen_name,
-     $slug ) = $TWL->create_list( $listname );
+my %list_details = $TWL->create_list( $listname );
      
-$TWL->populate_list(
-    $list_id,
-    $user_id,
-    $user_screen_name,
-    $slug,
-    \@twitter_ids );
+$TWL->populate_list( \%list_details, \@twitter_ids );
     
 $TWL->set_debug( 1 );
 $TWL->debug( "...List $slug (id: $list_id) populated successfully!" );
@@ -49,6 +41,18 @@ $TWL->debug( "...List $slug (id: $list_id) populated successfully!" );
 #### Description
 
 Twitter::List provides the ability to easily create Twitter lists and populate them with a list of Twitter usernames.
+
+#### Twitter::List Examples
+
+##### Twitter::List::CPANAuthors
+
+A list creation library called Twitter::List::CPANAuthors is also
+provided as an example of one way to write a custom list generator module.
+
+There is also a sample caller script (bin/app-example.pl) which makes use of
+Twitter::List::CPANAuthors to create a List on Twitter, and populate it with
+the Twitter IDs of all the CPAN authors using data from the MetaCPAN API.
+
 
 #### Warning
 
